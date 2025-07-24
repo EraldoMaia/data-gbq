@@ -26,12 +26,13 @@ steps:
       - |
         echo "🚀 Executando DDL da Tabela $_TABLE na camada $_LAYER..."
         DDL_FILE="gs://$_BUCKET/$_LAYER/$_TABLE/ddl_${_TABLE}.sql"
-        if gsutil -q stat ${DDL_FILE}; then
-          echo "Arquivo encontrado: ${DDL_FILE}"
-          bq query --project_id=${_PROJECT_ID} --use_legacy_sql=false "$(gsutil cat ${DDL_FILE})"
+        DDL_FILE=$(echo $DDL_FILE)  # Garante montagem no bash, não no parser do Cloud Build
+        if gsutil -q stat "$DDL_FILE"; then
+          echo "Arquivo encontrado: $DDL_FILE"
+          bq query --project_id=$_PROJECT_ID --use_legacy_sql=false "$(gsutil cat $DDL_FILE)"
           echo "✅ DDL executado com sucesso."
         else
-          echo "⚠️ Nenhum DDL encontrado para ${_TABLE}, pulando step..."
+          echo "⚠️ Nenhum DDL encontrado para $_TABLE, pulando step..."
         fi
 
   # 2. Executa a Procedure de Carga da Tabela no BigQuery
@@ -42,10 +43,11 @@ steps:
       - |
         echo "🚀 Criando/Atualizando Procedure de carga da Tabela $_TABLE na camada $_LAYER..."
         PROC_FILE="gs://$_BUCKET/$_LAYER/$_TABLE/prc_load_${_TABLE}.sql"
-        if gsutil -q stat ${PROC_FILE}; then
-          echo "Arquivo encontrado: ${PROC_FILE}"
-          bq query --project_id=${_PROJECT_ID} --use_legacy_sql=false "$(gsutil cat ${PROC_FILE})"
+        PROC_FILE=$(echo $PROC_FILE)
+        if gsutil -q stat "$PROC_FILE"; then
+          echo "Arquivo encontrado: $PROC_FILE"
+          bq query --project_id=$_PROJECT_ID --use_legacy_sql=false "$(gsutil cat $PROC_FILE)"
           echo "✅ Procedure criada/atualizada com sucesso."
         else
-          echo "⚠️ Nenhuma procedure encontrada para ${_TABLE}, pulando step..."
+          echo "⚠️ Nenhuma procedure encontrada para $_TABLE, pulando step..."
         fi
