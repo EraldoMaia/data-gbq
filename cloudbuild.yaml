@@ -1,5 +1,5 @@
 substitutions:
-  _BUCKET: 'tf_bigquery_scripts_bucket'
+  _BUCKET: 'tf-bigquery-scripts-bucket'
   _PROJECT_ID: 'trusted-zone-466913'   # Projeto de destino
   _LAYER: 'trusted'                    # Camada (trusted ou refined)
   _TABLE: 'tb_sample_sales'            # Tabela alvo
