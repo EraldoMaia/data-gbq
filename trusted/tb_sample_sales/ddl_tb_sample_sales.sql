@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `trusted-zone-466913.kaggle.tb_sample_sales` (
+CREATE TABLE IF NOT EXISTS `kaggle.tb_sample_sales` (
   num_pedido                        INT64,
   qtd_pedido                        INT64,
   valor_unidade_pedido              FLOAT64,

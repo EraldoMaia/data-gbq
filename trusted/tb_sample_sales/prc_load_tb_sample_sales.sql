@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE `sp.prc_load_tb_sample_sales`
+CREATE OR REPLACE PROCEDURE `procs.prc_load_tb_sample_sales`
 (
     VAR_PRJ_RAW     STRING,
     VAR_PRJ_TRUSTED STRING,
