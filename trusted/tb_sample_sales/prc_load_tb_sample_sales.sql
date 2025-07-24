@@ -47,11 +47,11 @@ BEGIN
                         ,CAST(msrp                      AS FLOAT64)  AS valor_preco_sugerido_fabricante 
                         ,CAST(
                              REGEXP_REPLACE(productcode,
-                                            r'\D',
+                                            r"\D",
                                             '' )        AS INT64)    AS cod_produto 
                         ,INITCAP(customername)                       AS nome_cliente 
                         ,CAST(REGEXP_REPLACE(phone,
-                                             r'\D',
+                                             r"\D",
                                              '' )       AS INT64)    AS num_telefone_cliente 
                         ,CASE 
                             WHEN LOWER(addressline1) = '' THEN 'NAO INFORMADO'
