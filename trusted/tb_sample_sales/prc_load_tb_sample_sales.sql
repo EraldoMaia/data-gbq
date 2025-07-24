@@ -79,8 +79,8 @@ BEGIN
                     WHEN UPPER(dealsize) = 'LARGE'  THEN 'GRANDE'
                     ELSE 'NAO INFORMADO'
                  END                                         AS volume_vendas 
-                ,CURRENT_TIMESTAMP()                         AS dt_insercao_registro
-            FROM `""" || VAR_PRJ_RAW || """.""" || VAR_DATASET || """.sample_sales
+                ,CURRENT_DATETIME('-03:00')                  AS dt_insercao_registro
+            FROM `""" || VAR_PRJ_RAW || """.""" || VAR_DATASET || """.sample_sales`
         )
     """;
 
@@ -95,8 +95,5 @@ BEGIN
         SELECT * FROM tmp_tb_sample_sales
     """;
 
-  EXCEPTION WHEN ERROR THEN
-    -- STEP 4: TRATAMENTO DE ERRO (gera falha com mensagem customizada)
-    RAISE USING MESSAGE = '❌ Erro na execução da procedure sp.prc_load_tb_sample_sales: ' || ERROR_MESSAGE;
   END;
 END;
