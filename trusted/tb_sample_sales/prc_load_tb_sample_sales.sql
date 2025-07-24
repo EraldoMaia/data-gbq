@@ -2,7 +2,8 @@ CREATE OR REPLACE PROCEDURE `sp.prc_load_tb_sample_sales`
 (
         VAR_PRJ_RAW     STRING,
         VAR_PRJ_TRUSTED STRING,
-        VAR_TABELA      STRING
+        VAR_TABELA      STRING,
+        VAR_DATASET     STRING
 )
 BEGIN
 		-- Inicio do bloco de TRY/CATCH (tratamento de erros)
@@ -86,17 +87,17 @@ BEGIN
                             ELSE 'NAO INFORMADO'
                          END                                         AS volume_vendas 
                         ,dt_insercao_registro 
-                FROM `""" || VAR_PRJ_RAW || """.kaggle.sample_sales`
+                FROM `""" || VAR_PRJ_RAW || """.""" || VAR_DATASET || """.sample_sales
             )""";
 
 			-- STEP 2: DELETA OS DADOS ANTERIORES DA TABELA FINAL
             EXECUTE IMMEDIATE """
-                TRUNCATE TABLE `""" || VAR_PRJ_TRUSTED || """.""" || VAR_TABELA || """`
+                TRUNCATE TABLE `""" || VAR_PRJ_RAW || """.""" || VAR_DATASET || """.""" || VAR_TABELA || """`
             """;
 
             -- STEP 3: INSERE OS DADOS DA TABELA TEMPORÁRIA NA TABELA FINAL
             EXECUTE IMMEDIATE """
-                INSERT INTO `""" || VAR_PRJ_TRUSTED || """.""" || VAR_TABELA || """`
+                INSERT INTO `""" || VAR_PRJ_RAW || """.""" || VAR_DATASET || """.""" || VAR_TABELA || """`
                 SELECT * FROM tmp_tb_sample_sales
             """;
 		END;

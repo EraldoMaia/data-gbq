@@ -1,8 +1,9 @@
 substitutions:
   _BUCKET: 'tf_bigquery_scripts_bucket'
-  _PROJECT_ID: 'trusted-zone-466913' # ALTERE DE ACORDO COM O PROJETO DE DESTINO
-  _LAYER: 'trusted'                  # ALTERE DE ACORDO COM A CAMADA DE DESTINO
-  _TABLE: 'tb_sample_sales'          # ALTERE DE ACORDO COM A TABELA DE DESTINO
+  _PROJECT_ID: 'trusted-zone-466913'   # Projeto de destino
+  _LAYER: 'trusted'                    # Camada (trusted ou refined)
+  _TABLE: 'tb_sample_sales'            # Tabela alvo
+  _DATASET: 'kaggle'                   # Dataset da tabela destino
 
 logsBucket: 'cloudbuild-logs-data-gbq-466417'
 timeout: 3600s
@@ -15,7 +16,7 @@ steps:
     args:
       - '-c'
       - |
-        echo "🔄 Sincronizando Artefatos (substituindo os existentes)..."
+        echo "Sincronizando Artefatos (substituindo os existentes)..."
         gsutil -m rsync -d -r data-gbq gs://$_BUCKET/
 
   # 1. Executa o DDL da Tabela no BigQuery
@@ -24,30 +25,26 @@ steps:
     args:
       - '-c'
       - |
-        echo "🚀 Executando DDL da Tabela $_TABLE na camada $_LAYER..."
-        DDL_FILE="gs://$_BUCKET/$_LAYER/$_TABLE/ddl_${_TABLE}.sql"
-        DDL_FILE=$(echo $DDL_FILE)  # Garante montagem no bash, não no parser do Cloud Build
-        if gsutil -q stat "$DDL_FILE"; then
-          echo "Arquivo encontrado: $DDL_FILE"
-          bq query --project_id=$_PROJECT_ID --use_legacy_sql=false "$(gsutil cat $DDL_FILE)"
-          echo "✅ DDL executado com sucesso."
+        echo "Executando DDL da Tabela $_TABLE..."
+        if gsutil -q stat "gs://$_BUCKET/$_LAYER/$_TABLE/ddl_$_TABLE.sql"; then
+          echo "Arquivo encontrado: gs://$_BUCKET/$_LAYER/$_TABLE/ddl_$_TABLE.sql"
+          bq query --project_id=$_PROJECT_ID --use_legacy_sql=false "$(gsutil cat gs://$_BUCKET/$_LAYER/$_TABLE/ddl_$_TABLE.sql)"
+          echo "DDL executado com sucesso."
         else
-          echo "⚠️ Nenhum DDL encontrado para $_TABLE, pulando step..."
+          echo "Nenhum DDL encontrado para $_TABLE, pulando step..."
         fi
 
-  # 2. Executa a Procedure de Carga da Tabela no BigQuery
+  # 2. Cria a procedure no BigQuery
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        echo "🚀 Criando/Atualizando Procedure de carga da Tabela $_TABLE na camada $_LAYER..."
-        PROC_FILE="gs://$_BUCKET/$_LAYER/$_TABLE/prc_load_${_TABLE}.sql"
-        PROC_FILE=$(echo $PROC_FILE)
-        if gsutil -q stat "$PROC_FILE"; then
-          echo "Arquivo encontrado: $PROC_FILE"
-          bq query --project_id=$_PROJECT_ID --use_legacy_sql=false "$(gsutil cat $PROC_FILE)"
-          echo "✅ Procedure criada/atualizada com sucesso."
+        echo "Criando/Atualizando Procedure de carga $_TABLE..."
+        if gsutil -q stat "gs://$_BUCKET/$_LAYER/$_TABLE/prc_load_$_TABLE.sql"; then
+          echo "Arquivo encontrado: gs://$_BUCKET/$_LAYER/$_TABLE/prc_load_$_TABLE.sql"
+          bq query --project_id=$_PROJECT_ID --use_legacy_sql=false "$(gsutil cat gs://$_BUCKET/$_LAYER/$_TABLE/prc_load_$_TABLE.sql)"
+          echo "Procedure criada/atualizada com sucesso."
         else
-          echo "⚠️ Nenhuma procedure encontrada para $_TABLE, pulando step..."
+          echo "Nenhuma procedure encontrada para $_TABLE, pulando step..."
         fi
