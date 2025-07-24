@@ -16,8 +16,8 @@ steps:
     args:
       - '-c'
       - |
-        echo "Sincronizando Artefatos (substituindo os existentes)..."
-        gsutil -m rsync -d -r data-gbq gs://$_BUCKET/
+        echo "Sincronizando artefatos do diretório atual (substituindo os existentes)..."
+        gsutil -m rsync -d -r . gs://$_BUCKET/
 
   # 1. Executa o DDL da Tabela no BigQuery
   - name: 'gcr.io/cloud-builders/gcloud'
