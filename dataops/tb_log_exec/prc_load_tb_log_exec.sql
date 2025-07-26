@@ -15,7 +15,7 @@ BEGIN
              '""" || VAR_PRJ || """'      AS projeto
             ,'""" || VAR_DATASET || """'  AS dataset
             ,'""" || VAR_TABELA || """'   AS table_name
-            ,'""" || QTD_LINHAS || """'   AS qtd_linhas
+            ,""" || QTD_LINHAS || """     AS qtd_linhas
             ,CURRENT_DATETIME('-03:00')   AS dt_insercao_registro
     """;
 
