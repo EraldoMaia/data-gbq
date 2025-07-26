@@ -12,11 +12,11 @@ BEGIN
     EXECUTE IMMEDIATE """
         INSERT INTO `data-ops-466417.data_quality.tb_log_error`
         SELECT 
-             '"""" || VAR_PRJ || """'     AS projeto
-            ,'"""" || VAR_DATASET || """' AS dataset
-            ,'"""" || VAR_TABELA || """'  AS table_name
-            ,'"""" || ERROR_MSG || """'   AS error_mensage
-             CURRENT_DATETIME('-03:00')   AS dt_insercao_registro
+             '""" || VAR_PRJ || """'      AS projeto
+            ,'""" || VAR_DATASET || """'  AS dataset
+            ,'""" || VAR_TABELA || """'   AS table_name
+            ,'""" || ERROR_MSG || """'    AS error_mensage
+            ,CURRENT_DATETIME('-03:00')   AS dt_insercao_registro
     """;
 
   END;
