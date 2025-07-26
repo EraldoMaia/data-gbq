@@ -6,6 +6,9 @@ CREATE OR REPLACE PROCEDURE `procs.prc_load_tb_top10_line_products`
     VAR_DATASET     STRING
 )
 BEGIN
+  DECLARE ERROR_MSG STRING;
+
+  BEGIN
   -- TRY/CATCH para captura de erro
   BEGIN
     -- STEP 1: CRIA A TABELA TEMPORÁRIA tmp_line_products_agg
@@ -56,13 +59,22 @@ BEGIN
                ,mes_pedido   ASC
                ,posicao_rank ASC
     """;
-
+    
     EXCEPTION WHEN ERROR THEN
-    -- STEP 5: CHAMA PROCEDURE DE LOG DE ERROS
-    CALL `data_quality.prc_load_tb_log_error`(VAR_PRJ_REFINED,VAR_DATASET,VAR_TABELA, @@error.message);
+      -- CAPTURA O ERRO NO BLOCO PRINCIPAL
+      SET ERROR_MSG = @@error.message;
 
-    -- Lança novamente o erro para o Airflow/Orquestrador capturar se necessário
-    RAISE USING MESSAGE = CONCAT("Erro no carregamento da tabela: ", @@error.message);
+      -- STEP 5: CHAMA A PROCEDURE DE LOG DE ERROS
+      CALL `data-ops-466417.data_quality.prc_load_tb_log_error`(
+          VAR_PRJ_REFINED,      -- Projeto de destino do log
+          VAR_DATASET,          -- Dataset onde o log será inserido
+          VAR_TABELA,           -- Nome da tabela processada
+          ERROR_MSG             -- Mensagem do erro
+      );
+
+      -- RELANÇA O ERRO PARA O AIRFLOW (opcional)
+      RAISE USING MESSAGE = CONCAT("Erro no carregamento da tabela: ", ERROR_MSG);
+    END;
 
   END;
 END;
