@@ -57,5 +57,12 @@ BEGIN
                ,posicao_rank ASC
     """;
 
+    EXCEPTION WHEN ERROR THEN
+    -- STEP 5: CHAMA PROCEDURE DE LOG DE ERROS
+    CALL `data_quality.prc_load_tb_log_error`(VAR_PRJ_REFINED,VAR_DATASET,VAR_TABELA, @@error.message);
+
+    -- Lança novamente o erro para o Airflow/Orquestrador capturar se necessário
+    RAISE USING MESSAGE = CONCAT("Erro no carregamento da tabela: ", @@error.message);
+
   END;
 END;
