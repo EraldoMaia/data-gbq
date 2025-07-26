@@ -103,7 +103,7 @@ BEGIN
     EXECUTE IMMEDIATE """
         SELECT 
              COUNT(*) AS qtd_linhas
-        FROM tmp_tb_top10_line_products
+        FROM tmp_tb_sample_sales
     """ INTO QTD_LINHAS;
 
     -- STEP 5: CHAMA A PROCEDURE DE LOG DE ERROS
