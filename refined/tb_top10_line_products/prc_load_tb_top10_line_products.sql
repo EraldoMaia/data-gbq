@@ -36,10 +36,6 @@ BEGIN
                                 ) AS posicao_rank
             FROM tmp_line_products_agg
             QUALIFY posicao_rank <= 10
-            ORDER BY
-                 ano_pedido   DESC
-                ,mes_pedido   ASC
-                ,posicao_rank ASC
         )
     """;
 
@@ -55,6 +51,10 @@ BEGIN
              *,
              CURRENT_DATETIME('-03:00') AS dt_insercao_registro
         FROM tmp_tb_top10_line_products
+        ORDER BY
+                ano_pedido   DESC
+               ,mes_pedido   ASC
+               ,posicao_rank ASC
     """;
 
   END;
