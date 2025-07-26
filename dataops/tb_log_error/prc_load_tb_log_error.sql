@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE `procs.prc_load_tb_log_error`
+CREATE OR REPLACE PROCEDURE `data_quality.prc_load_tb_log_error`
 (
     VAR_PRJ         STRING,
     VAR_DATASET     STRING,
