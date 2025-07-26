@@ -7,6 +7,7 @@ CREATE OR REPLACE PROCEDURE `procs.prc_load_tb_sample_sales`
 )
 BEGIN
   DECLARE ERROR_MSG STRING;
+  DECLARE QTD_LINHAS INT64 DEFAULT 0;
 
   BEGIN
   -- TRY/CATCH para captura de erro
@@ -98,11 +99,26 @@ BEGIN
         SELECT * FROM tmp_tb_sample_sales
     """;
 
+    -- STEP 4: ATRIBUI A QUANTIDADE DE LINHAS INSERIDAS A VARIAVEL QTD_LINHAS-- STEP 5: ATRIBUI A QUANTIDADE DE LINHAS INSERIDAS A VARIAVEL QTD_LINHAS
+    EXECUTE IMMEDIATE """
+        SELECT 
+             COUNT(*) AS qtd_linhas
+        FROM tmp_tb_top10_line_products
+    """ INTO QTD_LINHAS;
+
+    -- STEP 5: CHAMA A PROCEDURE DE LOG DE ERROS
+      CALL `data-ops-466417.data_quality.prc_load_tb_log_exec`(
+          VAR_PRJ_TRUSTED,  -- Projeto de destino do log
+          VAR_DATASET,      -- Dataset onde o log será inserido
+          VAR_TABELA,       -- Nome da tabela processada
+          QTD_LINHAS        -- Quantidade de linhas inseridas
+      );
+
      EXCEPTION WHEN ERROR THEN
       -- CAPTURA O ERRO NO BLOCO PRINCIPAL
       SET ERROR_MSG = @@error.message;
 
-      -- STEP 5: CHAMA A PROCEDURE DE LOG DE ERROS
+      -- STEP 6: CHAMA A PROCEDURE DE LOG DE ERROS
       CALL `data-ops-466417.data_quality.prc_load_tb_log_error`(
           VAR_PRJ_TRUSTED,      -- Projeto de destino do log
           VAR_DATASET,          -- Dataset onde o log será inserido

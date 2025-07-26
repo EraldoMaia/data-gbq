@@ -1,8 +1,8 @@
 substitutions:
   _BUCKET: 'tf-bigquery-scripts-bucket'
-  _PROJECT_ID: 'refined-zone-467112'    # Atere de acordo com o Projeto de destino
-  _LAYER: 'refined'                     # Atere de acordo com a Camada de destino (trusted ou refined)
-  _TABLE: 'tb_top10_line_products'      # Atere de acordo com o Tabela de destino
+  _PROJECT_ID: 'trusted-zone-466913'    # Atere de acordo com o Projeto de destino
+  _LAYER: 'trusted'                     # Atere de acordo com a Camada de destino (trusted ou refined)
+  _TABLE: 'tb_sample_sales'      # Atere de acordo com o Tabela de destino
   _DATASET: 'kaggle'                    # Atere de acordo com o Dataset da tabela destino
 
 logsBucket: 'cloudbuild-logs-data-gbq-466417'
