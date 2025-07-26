@@ -1,16 +1,16 @@
 substitutions:
   _BUCKET: 'tf-bigquery-scripts-bucket'
-  _PROJECT_ID: 'trusted-zone-466913'   # Projeto de destino
-  _LAYER: 'trusted'                    # Camada (trusted ou refined)
-  _TABLE: 'tb_sample_sales'            # Tabela alvo
-  _DATASET: 'kaggle'                   # Dataset da tabela destino
+  _PROJECT_ID: 'refined-zone-467112'    # Atere de acordo com o Projeto de destino
+  _LAYER: 'refined'                     # Atere de acordo com a Camada de destino (trusted ou refined)
+  _TABLE: 'tb_top10_line_products'      # Atere de acordo com o Tabela de destino
+  _DATASET: 'kaggle'                    # Atere de acordo com o Dataset da tabela destino
 
 logsBucket: 'cloudbuild-logs-data-gbq-466417'
 timeout: 3600s
 
 steps:
 
-  # 0. Sincroniza todos os artefatos (substitui os existentes)
+  # 0. Sincroniza todos os artefatos na camada de destino (substitui os existentes)
   - name: 'gcr.io/cloud-builders/gsutil'
     entrypoint: 'bash'
     args:
