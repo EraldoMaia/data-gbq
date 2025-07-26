@@ -1,9 +1,9 @@
 substitutions:
   _BUCKET: 'tf-bigquery-scripts-bucket'
-  _PROJECT_ID: 'data-ops-466417'    # Atere de acordo com o Projeto de destino
-  _LAYER: 'dataops'                     # Atere de acordo com a Camada de destino (trusted ou refined)
-  _TABLE: 'tb_log_exec'      # Atere de acordo com o Tabela de destino
-  _DATASET: 'data_quality'                    # Atere de acordo com o Dataset da tabela destino
+  _PROJECT_ID: 'refined-zone-467112'    # Atere de acordo com o Projeto de destino
+  _LAYER: 'refined'                     # Atere de acordo com a Camada de destino (trusted ou refined)
+  _TABLE: 'tb_top10_line_products'      # Atere de acordo com o Tabela de destino
+  _DATASET: 'kaggle'                    # Atere de acordo com o Dataset da tabela destino
 
 logsBucket: 'cloudbuild-logs-data-gbq-466417'
 timeout: 3600s
