@@ -104,7 +104,7 @@ BEGIN
 
       -- STEP 5: CHAMA A PROCEDURE DE LOG DE ERROS
       CALL `data-ops-466417.data_quality.prc_load_tb_log_error`(
-          VAR_PRJ_REFINED,      -- Projeto de destino do log
+          VAR_PRJ_TRUSTED,      -- Projeto de destino do log
           VAR_DATASET,          -- Dataset onde o log será inserido
           VAR_TABELA,           -- Nome da tabela processada
           ERROR_MSG             -- Mensagem do erro
