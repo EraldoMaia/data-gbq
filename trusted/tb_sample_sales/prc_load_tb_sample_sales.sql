@@ -6,6 +6,9 @@ CREATE OR REPLACE PROCEDURE `procs.prc_load_tb_sample_sales`
     VAR_DATASET     STRING
 )
 BEGIN
+  DECLARE ERROR_MSG STRING;
+
+  BEGIN
   -- TRY/CATCH para captura de erro
   BEGIN
     -- STEP 1: CRIA A TABELA TEMPORÁRIA tmp_tb_sample_sales
@@ -94,6 +97,22 @@ BEGIN
         INSERT INTO `""" || VAR_PRJ_TRUSTED || """.""" || VAR_DATASET || """.""" || VAR_TABELA || """`
         SELECT * FROM tmp_tb_sample_sales
     """;
+
+     EXCEPTION WHEN ERROR THEN
+      -- CAPTURA O ERRO NO BLOCO PRINCIPAL
+      SET ERROR_MSG = @@error.message;
+
+      -- STEP 5: CHAMA A PROCEDURE DE LOG DE ERROS
+      CALL `data-ops-466417.data_quality.prc_load_tb_log_error`(
+          VAR_PRJ_REFINED,      -- Projeto de destino do log
+          VAR_DATASET,          -- Dataset onde o log será inserido
+          VAR_TABELA,           -- Nome da tabela processada
+          ERROR_MSG             -- Mensagem do erro
+      );
+
+      -- RELANÇA O ERRO PARA O AIRFLOW 
+      RAISE USING MESSAGE = CONCAT("Erro no carregamento da tabela: ", ERROR_MSG);
+    END;
 
   END;
 END;
